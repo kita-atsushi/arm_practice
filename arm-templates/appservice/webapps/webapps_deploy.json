@@ -7,6 +7,14 @@
         },
         "appservice_plan_name": {
             "type": "string"
+        },
+        "appservice_sku": {
+            "type": "string",
+            "allowedValues": [
+                "B1",
+                "S1",
+                "P1v2"
+            ]
         }
     },
     "variables": {},
@@ -17,7 +25,7 @@
             "apiVersion": "2019-08-01",
             "location": "[resourceGroup().location]",
             "sku": {
-                "name": "B1",
+                "name": "[parameters('appservice_sku')]",
                 "capacity": 1
             },
             "properties": {
@@ -39,9 +47,13 @@
         }
     ],
     "outputs": {
+        "webSitesResourceId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Web/sites', parameters('webapp_name'))]"
+        },
         "possibleOutboundIpAddresses": {
             "type": "string",
-            "value": "[concat('Microsoft.Web/sites/', parameters('webapp_name'), '/possibleOutboundIpAddresses')]"
+            "value": "[reference(parameters('webapp_name'), '2019-08-01', 'Full').properties.possibleOutboundIpAddresses]"
         }
     }
 }

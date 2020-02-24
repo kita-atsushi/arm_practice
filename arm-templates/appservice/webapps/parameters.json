@@ -7,6 +7,9 @@
       },
       "appservice_plan_name": {
         "value": "plan2020022301"
+      },
+      "appservice_sku": {
+        "value": "B1"
       }
     }
 }
