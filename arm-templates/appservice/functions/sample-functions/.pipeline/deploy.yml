@@ -1,0 +1,55 @@
+trigger:
+  - master
+    
+pool:
+  vmImage: 'ubuntu-18.04'
+
+variables:
+  serviceConnectionName: 'Pay-As-You-Go(f40cda69-5783-49c6-b739-6149c34d3179)'
+  subscriptionId: 'f40cda69-5783-49c6-b739-6149c34d3179'
+  resourceGroupName: 'testarm01'
+  location: 'Japan West'
+  resourceNameSuffix: '2020012603'
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: $(serviceConnectionName)
+    subscriptionId: $(subscriptionId)
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: $(resourceGroupName)
+    location: $(location)
+    templateLocation: 'Linked artifact'
+    csmFile: 'arm-templates/template.json'
+    overrideParameters: '-suffix $(resourceNameSuffix)'
+    deploymentMode: 'Incremental'
+  displayName: 'Deploy function infrastructure'
+- task: DotNetCoreCLI@2
+  displayName: "Build Function"
+  inputs:
+    command: publish
+    arguments: '--configuration Release --output publish_output'
+    projects: 'functions/MyFunctionProj/MyFunctionProj.csproj'
+    publishWebProjects: false
+    modifyOutputPath: true
+    zipAfterPublish: false
+- task: ArchiveFiles@2
+  displayName: "Archive files"
+  inputs:
+    rootFolderOrFile: "$(System.DefaultWorkingDirectory)/publish_output/MyFunctionProj"
+    includeRootFolder: false
+    archiveFile: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
+    artifactName: 'drop'
+
+- task: AzureFunctionApp@1
+  displayName: "Publish AzureFunction"
+  inputs:
+    azureSubscription: $(serviceConnectionName)
+    appType: 'functionApp'
+    appName: 'funcapp$(resourceNameSuffix)'
+    package: '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
+    deploymentMethod: 'runFromPackage'
