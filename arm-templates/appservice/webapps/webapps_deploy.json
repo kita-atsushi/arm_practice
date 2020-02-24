@@ -20,9 +20,6 @@
                 "name": "B1",
                 "capacity": 1
             },
-            "tags": {
-                "displayName": "[parameters('appservice_plan_name')]"
-            },
             "properties": {
                 "name": "[parameters('appservice_plan_name')]"
             }
