@@ -1,0 +1,74 @@
+[
+     {
+       "category": "SQLInsights",
+       "enabled": @@IS_SQLInsights@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "AutomaticTuning",
+       "enabled": @@IS_AutomaticTuning@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "QueryStoreRuntimeStatistics",
+       "enabled": @@IS_QueryStoreRuntimeStatistics@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "QueryStoreWaitStatistics",
+       "enabled": @@IS_QueryStoreWaitStatistics@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "Errors",
+       "enabled": @@IS_Errors@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "DatabaseWaitStatistics",
+       "enabled": @@IS_DatabaseWaitStatistics@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "Blocks",
+       "enabled": @@IS_Blocks@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "Timeouts",
+       "enabled": @@IS_Timeouts@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "Deadlocks",
+       "enabled": @@IS_Deadlocks@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     }
+]

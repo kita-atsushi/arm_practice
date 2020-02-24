@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspaceName": {
+            "type": "String"
+        },
+        "pricingTier": {
+            "type": "string",
+            "defaultValue": "pergb2018"
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('workspaceName')]",
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "apiVersion": "2017-03-15-preview",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "sku": {
+                    "name": "[parameters('pricingTier')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "sqlServerResourceId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+        }
+    }
+}

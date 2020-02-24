@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlserver_name": {
+        "value": "sql-test2020022301"
+      },
+      "sqldb_name": {
+        "value": "sqldb-test2020020301"
+      },
+      "allowed_ips": {
+        "value": "13.78.59.237,13.78.55.122,13.78.45.45,13.78.52.161,13.78.50.201,13.78.58.123,13.78.48.206,13.78.28.248"
+      }
+    }
+}

@@ -1,0 +1,42 @@
+[
+     {
+       "category": "AppServiceHTTPLogs",
+       "enabled": @@IS_AppServiceHTTPLogs@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "AppServiceConsoleLogs",
+       "enabled": @@IS_AppServiceConsoleLogs@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "AppServiceAppLogs",
+       "enabled": @@IS_AppServiceAppLogs@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "AppServiceFileAuditLogs",
+       "enabled": @@IS_AppServiceFileAuditLogs@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "AppServiceAuditLogs",
+       "enabled": @@IS_AppServiceAuditLogs@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     }
+]

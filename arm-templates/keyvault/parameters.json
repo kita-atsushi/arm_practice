@@ -1,0 +1,22 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "keyvault_name": {
+        "value": "testkeyvault2020022301"
+      },
+      "allowed_tenant_id": {
+        "value": "225f2937-a1f8-41bd-ae9f-cfffe9d3c621"
+      },
+      "allowed_object_id": {
+        "value": "7a11b7d9-e22d-4036-8818-0c96646387d2"
+      },
+      "secrets": {
+        "value": [
+            { "name": "key001", "value": "value001" },
+            { "name": "key002", "value": "value002" },
+            { "name": "key003", "value": "value003" }
+        ]
+      }
+    }
+}

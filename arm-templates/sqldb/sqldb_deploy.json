@@ -1,0 +1,76 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlserver_name": {
+            "type": "string"
+        },
+        "sqldb_name": {
+            "type": "string"
+        },
+        "allowed_ips": {
+            "type": "string",
+            "defaultValue": "127.0.0.1,192.168.33.1"
+        }
+    },
+    "variables": {
+        "allowed_ips_list": "[split(parameters('allowed_ips'), ',')]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('sqlserver_name')]",
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2015-05-01-preview",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "administratorLogin": "adminUsername",
+                "administratorLoginPassword": "adminP@ssworD"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/firewallRules",
+            "name": "[concat(parameters('sqlserver_name'), '/', 'allowWebApps-',copyIndex())]",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('sqlserver_name'))]"
+            ],
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "startIpAddress": "[variables('allowed_ips_list')[copyIndex()]]",
+                "endIpAddress": "[variables('allowed_ips_list')[copyIndex()]]"
+            },
+            "copy": {
+                "name": "firewallRulesLoop",
+                "count": "[length(variables('allowed_ips_list'))]"
+            }
+        },
+        {
+            "name": "[concat(parameters('sqlserver_name'), '/', parameters('sqldb_name'))]",
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2017-10-01-preview",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('sqlserver_name'))]"
+            ],
+            "sku": {
+                "name": "Basic",
+                "tier": "Basic",
+                "capacity": 1
+            },
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": 104857600
+            }
+        }
+    ],
+    "outputs": {
+        "sqlServerResourceId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Sql/servers', parameters('sqlserver_name'))]"
+        },
+        "sqlDBResourceId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserver_name'), parameters('sqldb_name'))]"
+        }
+    }
+}

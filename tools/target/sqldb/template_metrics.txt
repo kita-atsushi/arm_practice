@@ -1,0 +1,26 @@
+[
+     {
+       "category": "Basic",
+       "enabled": @@IS_Basic@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "InstanceAndAppAdvanced",
+       "enabled": @@IS_InstanceAndAppAdvanced@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     },
+     {
+       "category": "WorkloadManagement",
+       "enabled": @@IS_WorkloadManagement@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     }
+]

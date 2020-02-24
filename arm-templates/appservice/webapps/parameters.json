@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "webapp_name": {
+        "value": "webapp2020022301"
+      },
+      "appservice_plan_name": {
+        "value": "plan2020022301"
+      }
+    }
+}

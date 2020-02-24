@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "webapp_name": {
+            "type": "string"
+        },
+        "appservice_plan_name": {
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('appservice_plan_name')]",
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2019-08-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "B1",
+                "capacity": 1
+            },
+            "tags": {
+                "displayName": "[parameters('appservice_plan_name')]"
+            },
+            "properties": {
+                "name": "[parameters('appservice_plan_name')]"
+            }
+        },
+        {
+            "name": "[parameters('webapp_name')]",
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2019-08-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('appservice_plan_name'))]"
+            ],
+            "properties": {
+                "name": "[parameters('webapp_name')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appservice_plan_name'))]"
+            }
+        }
+    ],
+    "outputs": {
+        "possibleOutboundIpAddresses": {
+            "type": "string",
+            "value": "[concat('Microsoft.Web/sites/', parameters('webapp_name'), '/possibleOutboundIpAddresses')]"
+        }
+    }
+}

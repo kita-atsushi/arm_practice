@@ -1,0 +1,10 @@
+[
+     {
+       "category": "AllMetrics",
+       "enabled": @@IS_AllMetrics@@,
+       "retentionPolicy": {
+         "enabled": false,
+         "days": 0
+       }
+     }
+]
