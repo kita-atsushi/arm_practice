@@ -1,0 +1,84 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "activityLogAlerts_testHealth001_name": {
+            "defaultValue": "testHealth001",
+            "type": "String"
+        },
+        "actiongroups_mattermostalertgroup001_externalid": {
+            "defaultValue": "/subscriptions/f40cda69-5783-49c6-b739-6149c34d3179/resourceGroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/mattermostalertgroup001",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "microsoft.insights/activityLogAlerts",
+            "apiVersion": "2017-04-01",
+            "name": "[parameters('activityLogAlerts_testHealth001_name')]",
+            "location": "Global",
+            "properties": {
+                "scopes": [
+                    "[subscription().id]"
+                ],
+                "condition": {
+                    "allOf": [
+                        {
+                            "field": "category",
+                            "equals": "ServiceHealth"
+                        },
+                        {
+                            "field": "properties.incidentType",
+                            "equals": "Incident",
+                            "containsAny": null
+                        },
+                        {
+                            "field": "properties.incidentType",
+                            "equals": "ActionRequired",
+                            "containsAny": null
+                        },
+                        {
+                            "field": "properties.impactedServices[*].ServiceName",
+                            "equals": null,
+                            "containsAny": [
+                                "App Service",
+                                "App Service \\ WebApps",
+                                "Application Gateway",
+                                "Azure Active Directory",
+                                "Azure Active Directory B2C",
+                                "Azure DNS",
+                                "Load Balancer",
+                                "Logic Apps",
+                                "Network Infrastructure",
+                                "SQL Database",
+                                "Storage",
+                                "Traffic Manager",
+                                "Virtual Network"
+                            ]
+                        },
+                        {
+                            "field": "properties.impactedServices[*].ImpactedRegions[*].RegionName",
+                            "equals": null,
+                            "containsAny": [
+                                "Global",
+                                "Japan East",
+                                "Japan West"
+                            ]
+                        }
+                    ]
+                },
+                "actions": {
+                    "actionGroups": [
+                        {
+                            "actionGroupId": "[parameters('actiongroups_mattermostalertgroup001_externalid')]",
+                            "webhookProperties": {}
+                        }
+                    ]
+                },
+                "enabled": true,
+                "description": "[concat(parameters('activityLogAlerts_testHealth001_name'), 'Description')]"
+            }
+        }
+    ]
+}

@@ -1,0 +1,98 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "alert_rule_name": {
+            "type": "string"
+        },
+        "alert_target_resource_group": {
+            "type": "string"
+        },
+        "alert_target_sqlserver_name": {
+            "type": "string"
+        },
+        "alert_target_sqldb_name": {
+            "type": "string"
+        },
+        "action_group_id": {
+            "type": "string"
+        },
+        "metric_name": {
+            "type": "string",
+            "allowedValues": [
+                "dtu_consumption_percent",
+                "storage_percent",
+                "workers_percent",
+                "sessions_percent"
+            ]
+        },
+        "threshold": {
+            "type": "int",
+            "minValue": 0,
+            "maxValue": 100
+        },
+        "time_aggregation": {
+            "type": "string",
+            "allowedValues": [
+                "Average",
+                "Maximum"
+            ]
+        },
+        "alert_severity": {
+            "type": "int",
+            "minValue": 0,
+            "maxValue": 4
+        },
+        "evaluation_frequency": {
+            "type": "string"
+        },
+        "window_size": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "alert_scope": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('alert_target_resource_group'), '/providers/Microsoft.Sql/servers/', parameters('alert_target_sqlserver_name'), '/databases/', parameters('alert_target_sqldb_name'))]",
+        "condition_name": "[concat(parameters('metric_name'), 'MetricCondition')]"
+    },
+    "resources": [
+        {
+            "type": "microsoft.insights/metricAlerts",
+            "apiVersion": "2018-03-01",
+            "name": "[parameters('alert_rule_name')]",
+            "location": "global",
+            "properties": {
+                "severity": "[parameters('alert_severity')]",
+                "enabled": true,
+                "scopes": [
+                    "[variables('alert_scope')]"
+                ],
+                "evaluationFrequency": "[parameters('evaluation_frequency')]",
+                "windowSize": "[parameters('window_size')]",
+                "criteria": {
+                    "allOf": [
+                        {
+                            "threshold": "[parameters('threshold')]",
+                            "name": "[variables('condition_name')]",
+                            "metricNamespace": "microsoft.sql/servers/databases",
+                            "metricName": "[parameters('metric_name')]",
+                            "dimensions": [],
+                            "operator": "GreaterThan",
+                            "timeAggregation": "[parameters('time_aggregation')]",
+                            "criterionType": "StaticThresholdCriterion"
+                        }
+                    ],
+                    "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria"
+                },
+                "autoMitigate": true,
+                "targetResourceType": "Microsoft.Sql/servers/databases",
+                "actions": [
+                    {
+                        "actionGroupId": "[parameters('action_group_id')]",
+                        "webHookProperties": {}
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {}
+}

@@ -1,0 +1,119 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "alertName": {
+            "type": "string"
+        },
+        "alertLocation": {
+            "type": "string",
+            "allowedValues": [
+                "japaneast"
+            ]
+        },
+        "alertDescription": {
+            "type": "string",
+            "defaultValue": "Sample log search alert"
+        },
+        "alertQuery": {
+            "type": "string",
+            "defaultValue": "requests"
+        },
+        "alertSourceId": {
+            "type": "string",
+            "defaultValue": "/subscriptions/f40cda69-5783-49c6-b739-6149c34d3179/resourceGroups/testMon02/providers/microsoft.insights/components/myFirstWebApplication23"
+        },
+        "alertScheduleFrequency": {
+            "type": "int",
+            "defaultValue": 5,
+            "minValue": 5,
+            "maxValue": 1440
+        },
+        "alertScheduleTime": {
+            "type": "int",
+            "defaultValue": 5,
+            "minValue": 5,
+            "maxValue": 2880
+        },
+        "alertActionsSeverityLevel": {
+            "type": "string",
+            "allowedValues": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4"
+            ]
+        },
+        "alertTriggerThreshold": {
+            "type": "string",
+            "defaultValue": "3"
+        },
+        "ActionGroupResourceId": {
+            "type": "string",
+            "defaultValue": "/subscriptions/f40cda69-5783-49c6-b739-6149c34d3179/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/actiongroups/MatterMostAlertGroup001"
+        },
+        "ActionGroupSubject": {
+            "type": "string",
+            "defaultValue": "Customized MM Webhook"
+        },
+        "ActionGroupWebhookContents": {
+            "type": "string",
+            "defaultValue": "{ \"alertname\":\"#alertrulename\", \"IncludeSearchResults\":true }"
+        }
+    },
+    "variables": {
+        "alertStatus": "true",
+        "alertType": "ResultCount",
+        "alertSchedule": {
+            "Frequency": "[parameters('alertScheduleFrequency')]",
+            "Time": "[parameters('alertScheduleTime')]"
+        },
+        "alertActions":{
+            "SeverityLevel": "[parameters('alertActionsSeverityLevel')]"
+        },
+        "alertTrigger":{
+            "Operator": "GreaterThan",
+            "Threshold": "[parameters('alertTriggerThreshold')]"
+        },
+        "actionGrp":{
+            "ActionGroup": "[parameters('ActionGroupResourceId')]",
+            "Subject": "[parameters('ActionGroupSubject')]",
+            "Webhook": "[parameters('ActionGroupWebhookContents')]"
+        }
+    },
+    "resources":[
+        {
+            "name":"[parameters('alertName')]",
+            "type":"Microsoft.Insights/scheduledQueryRules",
+            "apiVersion": "2018-04-16",
+            "location": "[parameters('alertLocation')]",
+            "properties": {
+                "description": "[parameters('alertDescription')]",
+                "enabled": "[variables('alertStatus')]",
+                "source": {
+                    "query": "[parameters('alertQuery')]",
+                    "dataSourceId": "[parameters('alertSourceId')]",
+                    "queryType":"[variables('alertType')]"
+                },
+                "schedule": {
+                    "frequencyInMinutes": "[variables('alertSchedule').Frequency]",
+                    "timeWindowInMinutes": "[variables('alertSchedule').Time]"
+                },
+                "action":{
+                    "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
+                    "severity":"[variables('alertActions').SeverityLevel]",
+                    "aznsAction": {
+                        "actionGroup":"[array(variables('actionGrp').ActionGroup)]",
+                        "emailSubject":"[variables('actionGrp').Subject]",
+                        "customWebhookPayload":"[variables('actionGrp').Webhook]"
+                    },
+                    "trigger": {
+                        "thresholdOperator":"[variables('alertTrigger').Operator]",
+                        "threshold":"[variables('alertTrigger').Threshold]"
+                    }
+                }
+            }
+        }
+    ]
+}

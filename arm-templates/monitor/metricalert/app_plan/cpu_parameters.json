@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "alert_rule_name": {
+          "value": "testCpuAlert001"
+      },
+      "alert_target_resource_group": {
+          "value": "testMon02"
+      },
+      "alert_target_serverfarms_name": {
+          "value": "myFirstWebApplication21"
+      },
+      "action_group_id": {
+          "value": "/subscriptions/f40cda69-5783-49c6-b739-6149c34d3179/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/actiongroups/MatterMostAlertGroup001"
+      },
+      "metric_name": {
+        "value": "CpuPercentage"
+      },
+      "threshold": {
+          "value": 80
+      },
+      "alert_severity": {
+          "value": 3
+      },
+      "evaluation_frequency": {
+          "value": "PT15M"
+      },
+      "window_size": {
+          "value": "PT15M"
+      }
+    }
+}
