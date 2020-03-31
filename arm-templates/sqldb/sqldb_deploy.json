@@ -57,7 +57,7 @@
             "sku": {
                 "name": "Basic",
                 "tier": "Basic",
-                "capacity": 1
+                "capacity": 5
             },
             "properties": {
                 "collation": "SQL_Latin1_General_CP1_CI_AS",
