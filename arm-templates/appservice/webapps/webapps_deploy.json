@@ -3,10 +3,12 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "webapp_name": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "webapp2020022301"
         },
         "appservice_plan_name": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "plan2020022301"
         },
         "appservice_sku": {
             "type": "string",

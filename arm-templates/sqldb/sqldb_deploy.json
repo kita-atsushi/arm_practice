@@ -3,10 +3,12 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "sqlserver_name": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "sql-test2020022301"
         },
         "sqldb_name": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "sqldb-test2020020301"
         },
         "allowed_ips": {
             "type": "string",

@@ -45,16 +45,8 @@
                                 "App Service",
                                 "App Service \\ WebApps",
                                 "Application Gateway",
-                                "Azure Active Directory",
-                                "Azure Active Directory B2C",
-                                "Azure DNS",
-                                "Load Balancer",
-                                "Logic Apps",
-                                "Network Infrastructure",
                                 "SQL Database",
-                                "Storage",
-                                "Traffic Manager",
-                                "Virtual Network"
+                                "Storage"
                             ]
                         },
                         {

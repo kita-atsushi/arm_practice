@@ -1,0 +1,75 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "deploy_template_stracc_name": {
+            "type": "string",
+            "defaultValue": "stracclinkedtemplate01"
+        },
+        "deploy_template_blob_container_name": {
+            "type": "string",
+            "defaultValue": "deploytemplate-20200331"
+        },
+        "deploy_template_webapp": {
+            "type": "string",
+            "defaultValue": "webapps/webapps_deploy.json"
+        },
+        "deploy_template_sql": {
+            "type": "string",
+            "defaultValue": "sql/sqldb_deploy.json"
+        },
+        "appservice_sku": {
+            "type": "string",
+            "defaultValue": "B1"
+        }
+    },
+    "variables": {
+        "deploy_name_webapp": "CreateWebApp",
+        "deploy_name_sql": "CreateSQLDB",
+        "deploy_template_base_uri": "[concat('https://', parameters('deploy_template_stracc_name'), '.blob.core.windows.net/', parameters('deploy_template_blob_container_name'))]",
+        "deploy_template_uri_webapp": "[concat(variables('deploy_template_base_uri'), '/', parameters('deploy_template_webapp'))]",
+        "deploy_template_uri_sql": "[concat(variables('deploy_template_base_uri'), '/', parameters('deploy_template_sql'))]"
+    },
+    "resources": [
+        {
+            "name": "[variables('deploy_name_webapp')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-05-01",
+            "subscriptionId": "[subscription().subscriptionId]",
+            "resourceGroup": "[resourceGroup().name]",
+            "properties": {
+                "templateLink": {
+                    "uri": "[variables('deploy_template_uri_webapp')]"
+                },
+                "parameters": {
+                    "appservice_sku": {
+                        "value": "[parameters('appservice_sku')]"
+                    }
+                },
+                "mode": "Incremental"
+            }
+        },
+        {
+            "name": "[variables('deploy_name_sql')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-05-01",
+            "subscriptionId": "[subscription().subscriptionId]",
+            "resourceGroup": "[resourceGroup().name]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments', '/', variables('deploy_name_webapp'))]"
+            ],
+            "properties": {
+                "templateLink": {
+                    "uri": "[variables('deploy_template_uri_sql')]"
+                },
+                "parameters": {
+                    "allowed_ips": {
+                        "value": "[reference(variables('deploy_name_webapp')).outputs.possibleOutboundIpAddresses.value]"
+                    }
+                },
+                "mode": "Incremental"
+            }
+        }
+    ],
+    "outputs": {}
+}
